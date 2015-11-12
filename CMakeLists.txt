@@ -1,48 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-PROJECT(slp_devman_plugin C)
-
-SET(SRCS
-	src/device_manager_io.c
-	src/device_manager_TRM.c
-	src/device_manager_siop.c
-	src/device_manager_plugin_sc7727.c)
-
-SET(DUMP_FILES
-        dump/dump_power.sh)
-
-SET(SRC_TEST
-	src/test_devices.c
-	src/device_manager_io.c
-	src/device_manager_siop.c)
-
-IF("${CMAKE_BUILD_TYPE}" STREQUAL "")
-	SET(CMAKE_BUILD_TYPE "Release")
-ENDIF("${CMAKE_BUILD_TYPE}" STREQUAL "")
-MESSAGE("Build type: ${CMAKE_BUILD_TYPE}")
-
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-SET(CMAKE_C_FLAGS_DEBUG "-O0 -g")
-SET(CMAKE_C_FLAGS_RELEASE "-O2")
-
-INCLUDE(FindPkgConfig)
-pkg_check_modules(pkgs REQUIRED devman_plugin)
-
-FOREACH(flag ${pkgs_CFLAGS})
-	SET(EXTRA_CFLAGS "${EXTRA_CFLAGS} ${flag}")
-ENDFOREACH(flag)
-
-
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS}")
-
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${SRCS})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${pkgs_LDFLAGS})
-
-ADD_EXECUTABLE(sys_oal_test ${SRC_TEST})
-TARGET_LINK_LIBRARIES(sys_oal_test ${pkgs_LDFLAGS})
+PROJECT(device-manager-sc7730 C)
 
 SET(PREFIX ${CMAKE_INSTALL_PREFIX})
 
-INSTALL(TARGETS ${PROJECT_NAME} DESTINATION lib COMPONENT RuntimeLibraries)
-INSTALL(PROGRAMS ${DUMP_FILES} DESTINATION /opt/etc/dump.d/module.d)
-INSTALL(TARGETS sys_oal_test DESTINATION bin)
+ADD_SUBDIRECTORY(hw/display)
+ADD_SUBDIRECTORY(hw/led)
