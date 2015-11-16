@@ -619,7 +619,7 @@ const char *image_enhance_str[INDEX_MAX] = {
 	"tone",
 	"outdoor",
 	"tune",
-	"color_blind",
+	"accessibility",
 	"cabc",
 };
 
@@ -779,7 +779,7 @@ int OEM_sys_set_image_enhance_color_blind(void *value)
 
 	snprintf(path, MAX_NAME, IMAGE_ENHANCE_PATH, image_enhance_str[INDEX_COLOR_BLIND]);
 	sprintf(value_string, "%d 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x",\
-		color_blind_value->power,\
+		color_blind_value->mode,\
 		color_blind_value->RrCr, color_blind_value->RgCg, color_blind_value->RbCb,\
 		color_blind_value->GrMr, color_blind_value->GgMg, color_blind_value->GbMb,\
 		color_blind_value->BrYr, color_blind_value->BgYg, color_blind_value->BbYb);

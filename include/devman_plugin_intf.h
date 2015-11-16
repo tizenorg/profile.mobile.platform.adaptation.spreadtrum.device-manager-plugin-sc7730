@@ -76,8 +76,18 @@ enum {
 	WM_MODE_MAX = WM_MODE_OUTDOOR
 };
 
+enum accessibility {
+	ACCESSIBILITY_OFF,
+	NEGATIVE,
+	COLOR_BLIND,
+	SCREEN_CURTAIN,
+	GRAYSCALE,
+	GRAYSCALE_NEGATIVE,
+	ACCESSIBILITY_MAX
+};
+
 struct color_blind_info {
-	bool power;
+	enum accessibility mode;
 	unsigned short RrCr;
 	unsigned short RgCg;
 	unsigned short RbCb;
