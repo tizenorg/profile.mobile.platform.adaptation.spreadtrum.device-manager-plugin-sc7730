@@ -11,6 +11,7 @@ Requires(postun): /sbin/ldconfig
 BuildRequires:  cmake
 BuildRequires:  pkgconfig(dlog)
 BuildRequires:  pkgconfig(hwcommon)
+BuildRequires:  pkgconfig(glib-2.0)
 
 %description
 Device manager plugin sc7730
