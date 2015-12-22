@@ -1,14 +1,14 @@
 ACTION!="add", GOTO="tizen_video_device_end"
 
 # video
-KERNEL=="video0", GROUP="video", SECLABEL{smack}="device::camera"
-KERNEL=="sprd_dma_copy", GROUP="video", SECLABEL{smack}="device::camera"
-KERNEL=="sprd_jpg", GROUP="video", SECLABEL{smack}="device::hwcodec"
-KERNEL=="sprd_image", GROUP="video", SECLABEL{smack}="device::hwcodec"
-KERNEL=="sprd_isp", GROUP="video", SECLABEL{smack}="device::camera"
-KERNEL=="sprd_rotation", GROUP="video", SECLABEL{smack}="device::camera"
-KERNEL=="sprd_scale", GROUP="video", SECLABEL{smack}="device::camera"
-KERNEL=="sprd_sensor", GROUP="video", SECLABEL{smack}="device::camera"
-KERNEL=="sprd_vsp", GROUP="video", SECLABEL{smack}="device::hwcodec"
+KERNEL=="video0", GROUP="users", SECLABEL{smack}="*"
+KERNEL=="sprd_dma_copy", GROUP="users", SECLABEL{smack}="*"
+KERNEL=="sprd_jpg", GROUP="users", SECLABEL{smack}="*"
+KERNEL=="sprd_image", GROUP="users", SECLABEL{smack}="*"
+KERNEL=="sprd_isp", GROUP="users", SECLABEL{smack}="*"
+KERNEL=="sprd_rotation", GROUP="users", SECLABEL{smack}="*"
+KERNEL=="sprd_scale", GROUP="users", SECLABEL{smack}="*"
+KERNEL=="sprd_sensor", GROUP="users", SECLABEL{smack}="*"
+KERNEL=="sprd_vsp", GROUP="users", SECLABEL{smack}="*"
 
 LABEL="tizen_video_device_end"
