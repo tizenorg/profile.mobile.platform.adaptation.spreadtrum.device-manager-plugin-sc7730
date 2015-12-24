@@ -29,6 +29,9 @@ make %{?jobs:-j%jobs}
 %install
 rm -rf %{buildroot}
 
+mkdir -p %{buildroot}%{_prefix}/lib/udev/rules.d
+install -m 644 61-tizen-video-device.rules %{buildroot}%{_prefix}/lib/udev/rules.d
+
 %make_install
 
 %post -p /sbin/ldconfig
@@ -39,3 +42,4 @@ rm -rf %{buildroot}
 %{_libdir}/hw/*.so
 %manifest %{name}.manifest
 %license LICENSE
+%{_prefix}/lib/udev/rules.d/61-tizen-video-device.rules
