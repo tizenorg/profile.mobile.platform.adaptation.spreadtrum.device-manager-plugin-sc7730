@@ -30,12 +30,6 @@
 
 #define IRLED_CONTROL_PATH "/sys/class/sec/sec_ir/ir_send"
 
-static int ir_is_available(bool *available)
-{
-	*available = true;
-	return 0;
-}
-
 static int ir_transmit(int *frequency_pattern, int size)
 {
 	int i, ret;
@@ -66,7 +60,6 @@ static int ir_open(struct hw_info *info,
 		return -ENOMEM;
 
 	ir_dev->common.info = info;
-	ir_dev->is_available = ir_is_available;
 	ir_dev->transmit = ir_transmit;
 
 	*common = (struct hw_common *)ir_dev;
