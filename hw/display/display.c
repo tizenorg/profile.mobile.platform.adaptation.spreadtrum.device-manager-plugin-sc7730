@@ -85,7 +85,7 @@ static int display_set_brightness(int brightness)
 	v = brightness/100.f*max;
 	r = sys_set_int(BACKLIGHT_PATH"/brightness", v);
 	if (r < 0) {
-		_E("fail to set brightness : %s", strerror(r));
+		_E("fail to set brightness : %s", r);
 		return r;
 	}
 

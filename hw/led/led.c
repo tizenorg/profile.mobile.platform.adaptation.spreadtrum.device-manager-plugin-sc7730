@@ -100,6 +100,8 @@ static int led_open(struct hw_info *info,
 		break;
 	}
 
+	if (i >= list_len)
+		return -EINVAL;
 	led_list[i].dev = calloc(1, sizeof(struct led_device));
 	if (!led_list[i].dev)
 		return -ENOMEM;
