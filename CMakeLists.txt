@@ -3,6 +3,7 @@ PROJECT(device-manager-sc7730 C)
 
 SET(PREFIX ${CMAKE_INSTALL_PREFIX})
 
+ADD_SUBDIRECTORY(hw/battery)
 ADD_SUBDIRECTORY(hw/display)
 ADD_SUBDIRECTORY(hw/led)
 ADD_SUBDIRECTORY(hw/external_connection)
