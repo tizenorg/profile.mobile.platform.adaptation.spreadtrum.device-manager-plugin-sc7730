@@ -78,7 +78,7 @@ int sys_get_int_wo_convert(char *path, int *value)
 		close(fd);
 		return -1;
 	}
-	close (fd);
+	close(fd);
 
 	return 0;
 }
@@ -166,8 +166,7 @@ int sys_get_str(char *fname, char *str)
 {
 	char buf[BUFF_MAX] = {0};
 
-	if (sys_read_buf(fname, buf) == 0)
-	{
+	if (sys_read_buf(fname, buf) == 0) {
 		strncpy(str, buf, strlen(buf));
 		return 0;
 	}

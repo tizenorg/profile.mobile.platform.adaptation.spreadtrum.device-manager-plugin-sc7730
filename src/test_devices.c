@@ -74,8 +74,7 @@ GENERATE_ACCESSORS_INT_RW(lcd_power, LCD_POWER_PATH)
 #define devmgr_log(fmt, args...)
 #endif
 
-enum display_type
-{
+enum display_type {
 	DISP_MAIN = 0,
 	DISP_SUB,
 	DISP_MAX
@@ -86,8 +85,7 @@ enum lux_status {
 	increment,
 };
 
-enum CABC_MODE
-{
+enum CABC_MODE {
 	CABC_OFF = 0,
 	CABC_USER_INTERFACE,
 	CABC_STILL_PICTURE,
@@ -95,8 +93,7 @@ enum CABC_MODE
 	CABC_MAX,
 };
 
-struct display_info
-{
+struct display_info {
 	enum display_type etype; /* FIXME:!! Main LCD or Sub LCD node */
 	char bl_name[MAX_NAME+1]; /* backlight name */
 	char lcd_name[MAX_NAME+1]; /* lcd name */
@@ -203,7 +200,7 @@ int OEM_sys_get_brightness(unsigned int lux)
 	};
 	int brightness;
 
-	for (brightness=0; (lux > Nr_Table[brightness]) && (brightness < 99); brightness++);
+	for (brightness = 0; (lux > Nr_Table[brightness]) && (brightness < 99); brightness++);
 
 	return brightness;
 }
@@ -262,7 +259,7 @@ static int OEM_sys_display_info(struct display_info *disp_info)
 	index = 0;
 	dirp = opendir(bl_path);
 	if (dirp) {
-		while(dent = readdir(dirp)) {
+		while (dent = readdir(dirp)) {
 			if (index >= DISP_MAX) {
 				devmgr_log("supports %d display node", DISP_MAX);
 				break;
@@ -285,7 +282,7 @@ static int OEM_sys_display_info(struct display_info *disp_info)
 	index = 0;
 	dirp = opendir(lcd_path);
 	if (dirp) {
-		while(dent = readdir(dirp)) {
+		while (dent = readdir(dirp)) {
 			if (index >= DISP_MAX) {
 				devmgr_log("supports %d display node", DISP_MAX);
 				break;
@@ -371,23 +368,22 @@ int OEM_sys_get_backlight_brightness(int index, int *value, int power_saving)
 	}
 
 	snprintf(path, MAX_NAME, MDNIE_BACKLIGHT_BRIGHTNESS_PATH);
-	if(!sys_check_node((char *)path)) {
+	if (!sys_check_node((char *)path)) {
 		ret = sys_get_int(path, value);
-		printf("[%s:%d]:path is %s\n",__FUNCTION__, __LINE__, path);
+		printf("[%s:%d]:path is %s\n", __FUNCTION__, __LINE__, path);
 	} else {
 		snprintf(path, MAX_NAME, BACKLIGHT_BRIGHTNESS_PATH, disp_info[index].bl_name);
 		ret = sys_get_int(path, value);
-		printf("[%s:%d]:path is %s\n",__FUNCTION__, __LINE__, path);
+		printf("[%s:%d]:path is %s\n", __FUNCTION__, __LINE__, path);
 	}
 
 	/*devmgr_log("path[%s]value[%d]power_saving[%d]", path, *value, power_saving);*/
 
-	if (power_saving){
+	if (power_saving) {
 		snprintf(path, MAX_NAME, BACKLIGHT_MAX_BRIGHTNESS_PATH, disp_info[index].bl_name);
-		printf("[%s:%d]:path is %s\n",__FUNCTION__, __LINE__, path);
+		printf("[%s:%d]:path is %s\n", __FUNCTION__, __LINE__, path);
 		ret = sys_get_int(path, &max_brightness);
-		if (ret)
-		{
+		if (ret) {
 			devmgr_log("Can't read max_brightness node[%s]", path);
 			return ret;
 		}
@@ -433,7 +429,7 @@ int set_backlight_brightness(int index, int value)
 	}
 
 	snprintf(path, MAX_NAME, MDNIE_BACKLIGHT_BRIGHTNESS_PATH);
-	if(!sys_check_node((char *)path)) {
+	if (!sys_check_node((char *)path)) {
 		ret = sys_set_int(path, value);
 	} else {
 		snprintf(path, MAX_NAME, BACKLIGHT_BRIGHTNESS_PATH, disp_info[index].bl_name);
@@ -457,11 +453,10 @@ int OEM_sys_set_backlight_brightness(int index, int value, int power_saving)
 
 	devmgr_log("path[%s]value[%d]power_saving[%d]", path, value, power_saving);
 
-	if (power_saving){
+	if (power_saving) {
 		snprintf(path, MAX_NAME, BACKLIGHT_MAX_BRIGHTNESS_PATH, disp_info[index].bl_name);
 		ret = sys_get_int(path, &max_brightness);
-		if (ret)
-		{
+		if (ret) {
 			devmgr_log("Can't read max_brightness node[%s]", path);
 			return ret;
 		}
@@ -483,8 +478,7 @@ int OEM_sys_set_backlight_brightness(int index, int value, int power_saving)
 	}
 
 	ret = set_backlight_brightness(index, value);
-	if (ret)
-	{
+	if (ret) {
 		devmgr_log("Can't set backlight brightness");
 		return ret;
 	}
@@ -644,7 +638,7 @@ int OEM_sys_get_lcd_cabc(int index, int *value)
 	snprintf(lcd_cabc_path, MAX_NAME, LCD_CABC_CONTROL_PATH, disp_info[index].lcd_name);
 	snprintf(mdnie_cabc_path, MAX_NAME, IMAGE_ENHANCE_PATH, image_enhance_str[INDEX_CABC]);
 
-	if(!sys_check_node((char *)mdnie_cabc_path)) {
+	if (!sys_check_node((char *)mdnie_cabc_path)) {
 		ret = sys_get_int((char *)mdnie_cabc_path, value);
 		devmgr_log("path[%s]value[%d]", mdnie_cabc_path, *value);
 	} else if (!sys_check_node((char *)lcd_cabc_path)) {
@@ -672,7 +666,7 @@ int OEM_sys_set_lcd_cabc(int index, int value)
 	snprintf(lcd_cabc_path, MAX_NAME, LCD_CABC_CONTROL_PATH, disp_info[index].lcd_name);
 	snprintf(mdnie_cabc_path, MAX_NAME, IMAGE_ENHANCE_PATH, image_enhance_str[INDEX_CABC]);
 
-	if(!sys_check_node((char *)mdnie_cabc_path)) {
+	if (!sys_check_node((char *)mdnie_cabc_path)) {
 		ret = sys_set_int((char *)mdnie_cabc_path, value);
 		devmgr_log("path[%s]value[%d]", mdnie_cabc_path, value);
 	} else if (!sys_check_node((char *)lcd_cabc_path)) {
@@ -702,11 +696,11 @@ int OEM_sys_get_auto_screen_tone(int index, int *value)
 	snprintf(lcd_cabc_path, MAX_NAME, LCD_CABC_CONTROL_PATH, disp_info[index].lcd_name);
 	snprintf(mdnie_cabc_path, MAX_NAME, IMAGE_ENHANCE_PATH, image_enhance_str[INDEX_CABC]);
 
-	if(!sys_check_node((char *)acl_path)) {
+	if (!sys_check_node((char *)acl_path)) {
 			ret = sys_get_int((char *)acl_path, value);
 			devmgr_log("path[%s]value[%d]", acl_path, *value);
 	} else {
-		if(!sys_check_node((char *)mdnie_cabc_path)) {
+		if (!sys_check_node((char *)mdnie_cabc_path)) {
 			ret = sys_get_int((char *)mdnie_cabc_path, value);
 			devmgr_log("path[%s]value[%d]", mdnie_cabc_path, *value);
 		} else if (!sys_check_node((char *)lcd_cabc_path)) {
@@ -736,11 +730,11 @@ int OEM_sys_set_auto_screen_tone(int index, int value)
 	snprintf(lcd_cabc_path, MAX_NAME, LCD_CABC_CONTROL_PATH, disp_info[index].lcd_name);
 	snprintf(mdnie_cabc_path, MAX_NAME, IMAGE_ENHANCE_PATH, image_enhance_str[INDEX_CABC]);
 
-	if(!sys_check_node((char *)acl_path)) {
+	if (!sys_check_node((char *)acl_path)) {
 			ret = sys_set_int((char *)acl_path, value);
 			devmgr_log("path[%s]value[%d]", acl_path, value);
 	} else {
-		if(!sys_check_node((char *)mdnie_cabc_path)) {
+		if (!sys_check_node((char *)mdnie_cabc_path)) {
 			if (value > CABC_OFF)
 				value = CABC_USER_INTERFACE;
 			ret = sys_set_int((char *)mdnie_cabc_path, value);
@@ -1205,9 +1199,9 @@ int OEM_sys_set_power_state(int value)
 
 int OEM_sys_set_power_lock(int value)
 {
-	static int power_lock_state=-1;
+	static int power_lock_state = -1;
 
-	if(power_lock_state == value)
+	if (power_lock_state == value)
 		return -1;
 	else
 		power_lock_state = value;
@@ -1230,14 +1224,13 @@ int OEM_sys_get_power_lock_support(int *value)
 	if (err == -1) {
 		devmgr_log("power lock node not found");
 		*value = 0;
-	}
-	else
+	} else
 		*value = 1;
 
 	return 0;
 }
 
-int OEM_sys_set_resetkey_disable (int value)
+int OEM_sys_set_resetkey_disable(int value)
 {
 	int ret = -1;
 
@@ -1246,8 +1239,8 @@ int OEM_sys_set_resetkey_disable (int value)
 	else
 		value = 0;
 
-	ret= sys_set_int(KEY_MANUAL_RESET_PMIC_PATH, value);
-	ret= sys_set_int(KEY_MANUAL_RESET_SAFEOUT_PATH, value);
+	ret = sys_set_int(KEY_MANUAL_RESET_PMIC_PATH, value);
+	ret = sys_set_int(KEY_MANUAL_RESET_SAFEOUT_PATH, value);
 
 	return ret;
 }
@@ -1421,7 +1414,7 @@ EXPORT_API const OEM_sys_devman_plugin_interface *OEM_sys_get_devman_plugin_inte
 	devman_plugin_interface_sc7727.OEM_sys_get_battery_charge_now = &OEM_sys_get_battery_charge_now;
 	devman_plugin_interface_sc7727.OEM_sys_get_battery_present = &OEM_sys_get_battery_present;
 	devman_plugin_interface_sc7727.OEM_sys_get_battery_health = &OEM_sys_get_battery_health;
-	devman_plugin_interface_sc7727.OEM_sys_get_battery_polling_required= &OEM_sys_get_battery_polling_required;
+	devman_plugin_interface_sc7727.OEM_sys_get_battery_polling_required = &OEM_sys_get_battery_polling_required;
 	devman_plugin_interface_sc7727.OEM_sys_get_battery_support_insuspend_charging = &OEM_sys_get_battery_support_insuspend_charging;
 
 	/* Connection interfaces  */
@@ -1477,7 +1470,7 @@ EXPORT_API const OEM_sys_devman_plugin_interface *OEM_sys_get_devman_plugin_inte
 	devman_plugin_interface_sc7727.OEM_sys_set_battery_siop_active = &OEM_sys_set_battery_siop_active;
 
 	devman_plugin_interface_sc7727.OEM_sys_get_cpu_enable_max_number = &OEM_sys_get_cpu_enable_max_number;
-	devman_plugin_interface_sc7727.OEM_sys_set_cpu_enable_max_number= &OEM_sys_set_cpu_enable_max_number;
+	devman_plugin_interface_sc7727.OEM_sys_set_cpu_enable_max_number = &OEM_sys_set_cpu_enable_max_number;
 
 	devman_plugin_interface_sc7727.OEM_sys_get_temperature_adc = &OEM_sys_get_temperature_adc;
 	devman_plugin_interface_sc7727.OEM_sys_get_temperature_value = &OEM_sys_get_temperature_value;
@@ -1669,7 +1662,7 @@ int ret = 0 ;
 	OEM_sys_get_backlight_min_brightness(int index, int *value);	//MISSING & not present in Redwood
 
 	int OEM_sys_set_svcled_color(int rgb, int led_on_ms, int led_off_ms);	//MISSING  & .......
-	int OEM_sys_set_resetkey_disable (int value);						//MISSING  & .......
+	int OEM_sys_set_resetkey_disable(int value);						//MISSING  & .......
 
 
 	int OEM_sys_set_irled_control(char *value);				//MISSING  & .......

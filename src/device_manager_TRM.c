@@ -16,7 +16,7 @@
 #include "device_manager_TRM.h"
 
 #define DEVMGR_LOG
-#if defined (DEVMGR_LOG)
+#if defined(DEVMGR_LOG)
 #define LOG_TAG "DEVICE_PLUGIN"
 #include <dlog/dlog.h>
 #define devmgr_log(fmt, args...)	SLOGI(fmt, ##args)
@@ -59,7 +59,7 @@ void TRM_send_socket(char *soket_path, char *write_buf)
 	snprintf(addr.sun_path, UNIX_PATH_MAX, "%s", soket_path);
 	addr.sun_family = AF_LOCAL;
 
-	ret = connect(socket_fd, (struct sockaddr *) &addr ,sizeof(sa_family_t) + strlen(soket_path) );
+	ret = connect(socket_fd, (struct sockaddr *) &addr, sizeof(sa_family_t) + strlen(soket_path));
 	if (ret != 0) {
 		running_step = 2;
 		close(socket_fd);
@@ -72,7 +72,7 @@ void TRM_send_socket(char *soket_path, char *write_buf)
 
 	return;
 
-fail :
+fail:
 	return;
 
 }
@@ -81,8 +81,8 @@ fail :
 
 #define TRM_SOCKET_FOR_SCENARIO_INFO       "/dev/socket/scenario_info"
 
-int Tizen_Resource_Manager(char *event_lock) {
-
+int Tizen_Resource_Manager(char *event_lock)
+{
 	TRM_send_socket(TRM_SOCKET_FOR_SCENARIO_INFO, event_lock);
 
 	return 0;

@@ -24,7 +24,7 @@
 #include "device_manager_io.h"
 
 #define DEVMGR_LOG
-#if defined (DEVMGR_LOG)
+#if defined(DEVMGR_LOG)
 #define LOG_TAG "DEVICE_PLUGIN"
 #include <dlog/dlog.h>
 #define devmgr_log(fmt, args...)	SLOGD(fmt, ##args)
@@ -36,8 +36,7 @@
 Redwood SIOP table
 Last updated on 2013.5.15
 ====================================================*/
-const device_siop_table siop_table[SIOP_SCENARIO_MAX][SIOP_LEVEL_MAX] =
-{
+const device_siop_table siop_table[SIOP_SCENARIO_MAX][SIOP_LEVEL_MAX] = {
 	{/***********  LCD ON *****************************/
 		/*  ITEM :   cpu_freq cpu_core  charging  BL lcd_freq */
 		/*  UNIT :    MHz		#core		mA		cd		Hz       */
@@ -53,7 +52,7 @@ const device_siop_table siop_table[SIOP_SCENARIO_MAX][SIOP_LEVEL_MAX] =
 
 	{/***********  LCD OFF ****************************/
 		/*  ITEM :   cpu_freq cpu_core  charging  BL lcd_freq */
-		/*  UNIT :    MHz   		#core		mA		cd		Hz       */
+		/*  UNIT :    MHz		#core		mA		cd		Hz       */
 		/* level 0 */{IGNORE,		IGNORE,		IGNORE,		IGNORE,		IGNORE},
 		/* level 1 */{IGNORE,		IGNORE,		IGNORE,		IGNORE,		IGNORE},
 		/* level 2 */{IGNORE,		IGNORE,		IGNORE,		IGNORE,		IGNORE},
@@ -69,15 +68,13 @@ const device_siop_table siop_table[SIOP_SCENARIO_MAX][SIOP_LEVEL_MAX] =
 #define MAX_NAME 255
 #define BUFF_MAX	255
 
-enum display_type
-{
+enum display_type {
 	DISP_MAIN = 0,
 	DISP_SUB,
 	DISP_MAX
 };
 
-struct display_info
-{
+struct display_info {
 	enum display_type etype; /* FIXME:!! Main LCD or Sub LCD node */
 	char bl_name[MAX_NAME+1]; /* backlight name */
 	char lcd_name[MAX_NAME+1]; /* lcd name */
@@ -137,10 +134,10 @@ int OEM_sys_set_battery_siop_active(int value)
 static int sys_set_battery_siop_control(int level, int charge_current)
 {
 	int ret;
-	int siop_activated=0;
+	int siop_activated = 0;
 	char buf[BUFF_MAX];
 
-	if (charge_current>=0)
+	if (charge_current >= 0)
 		siop_activated = 1;
 
 	ret = sys_set_int(BATTERY_SIOP_ACTIVATE_PATH, siop_activated);
@@ -148,7 +145,7 @@ static int sys_set_battery_siop_control(int level, int charge_current)
 		return -ENODEV;
 	}
 
-	if(siop_activated == 1) {
+	if (siop_activated == 1) {
 		ret = sys_set_int(BATTERY_SIOP_LEVEL_PATH, level);
 		if (ret == -1) {
 			return -ENODEV;
@@ -176,7 +173,7 @@ int OEM_sys_get_backlight_overheating_control(int index, int *value)
 	}
 
 	snprintf(path, MAX_NAME, MDNIE_BACKLIGHT_OVERHEATING_PATH);
-	if(!sys_check_node((char *)path)) {
+	if (!sys_check_node((char *)path)) {
 		ret = sys_get_int(path, value);
 	} else {
 		snprintf(path, MAX_NAME, BACKLIGHT_OVERHEATING_PATH, disp_info[index].bl_name);
@@ -204,8 +201,7 @@ int OEM_sys_set_backlight_overheating_control(int index, int value)
 	}
 
 	ret = set_backlight_brightness(index, value);
-	if (ret)
-	{
+	if (ret) {
 		devmgr_log("Can't set backlight brightness");
 		return ret;
 	}
@@ -213,7 +209,7 @@ int OEM_sys_set_backlight_overheating_control(int index, int value)
 	return ret;
 }
 
-int current_level=-1, current_mode=-1;
+int current_level = -1, current_mode = -1;
 device_siop_table current_table = {RELEASE, RELEASE, RELEASE, 100, 60};
 
 int OEM_sys_set_siop_control(int level, int mode)
@@ -222,50 +218,50 @@ int OEM_sys_set_siop_control(int level, int mode)
 
 	memcpy(&new_table, &siop_table[mode][level], sizeof(device_siop_table));
 
-	devmgr_log("level %d, mode %d",level, mode);
-	devmgr_log("current_siop {%d, %d, %d, %d, %d}",current_table.cpu_freq, current_table.cpu_max_core,\
+	devmgr_log("level %d, mode %d", level, mode);
+	devmgr_log("current_siop {%d, %d, %d, %d, %d}", current_table.cpu_freq, current_table.cpu_max_core,\
 		current_table.battery_charing, current_table.backlight, current_table.lcd_freq);
-	devmgr_log("new_siop {%d, %d, %d, %d, %d}",new_table.cpu_freq, new_table.cpu_max_core,\
+	devmgr_log("new_siop {%d, %d, %d, %d, %d}", new_table.cpu_freq, new_table.cpu_max_core,\
 		new_table.battery_charing, new_table.backlight, new_table.lcd_freq);
 
-	if((current_level==level) && (current_mode==mode))
+	if ((current_level == level) && (current_mode == mode))
 		return 0;
 
 	/* CPU */
-	if((new_table.cpu_freq != IGNORE) && (new_table.cpu_freq != current_table.cpu_freq)) {
-		devmgr_log("CPU max clock %d",new_table.cpu_freq);
+	if ((new_table.cpu_freq != IGNORE) && (new_table.cpu_freq != current_table.cpu_freq)) {
+		devmgr_log("CPU max clock %d", new_table.cpu_freq);
 		sys_set_int(CPUFREQ_POWER_MAX_FREQ_PATH, new_table.cpu_freq);
 		current_table.cpu_freq = new_table.cpu_freq;
 	}
-	if((new_table.cpu_max_core != IGNORE) && (new_table.cpu_max_core != current_table.cpu_max_core)) {
-		devmgr_log("CPU max core num %d",new_table.cpu_max_core);
+	if ((new_table.cpu_max_core != IGNORE) && (new_table.cpu_max_core != current_table.cpu_max_core)) {
+		devmgr_log("CPU max core num %d", new_table.cpu_max_core);
 		sys_set_int(CPU_ENABLE_MAX_NUMBER_PATH, new_table.cpu_max_core);
 		current_table.cpu_max_core = new_table.cpu_max_core;
 	}
 
 	/* Battery charging */
 	//OEM_sys_set_battery_siop_active(siop_table[level].battery_charing);
-	if((new_table.battery_charing != IGNORE) && (new_table.battery_charing != current_table.battery_charing)) {
-		devmgr_log("battery_charing current %d",new_table.battery_charing);
+	if ((new_table.battery_charing != IGNORE) && (new_table.battery_charing != current_table.battery_charing)) {
+		devmgr_log("battery_charing current %d", new_table.battery_charing);
 		sys_set_battery_siop_control(level, new_table.battery_charing);
 		current_table.battery_charing = new_table.battery_charing;
 	}
 
 	/* LCD */
-	if((new_table.backlight != IGNORE) && (new_table.backlight != current_table.backlight)) {
-		devmgr_log("backlight %d",new_table.backlight);
+	if ((new_table.backlight != IGNORE) && (new_table.backlight != current_table.backlight)) {
+		devmgr_log("backlight %d", new_table.backlight);
 		OEM_sys_set_backlight_overheating_control(DISP_MAIN, new_table.backlight);
 		current_table.backlight = new_table.backlight;
 	}
 
-	if((new_table.lcd_freq != IGNORE) && (new_table.lcd_freq != current_table.lcd_freq)) {
-		devmgr_log("lcd_freq %d",new_table.lcd_freq);
+	if ((new_table.lcd_freq != IGNORE) && (new_table.lcd_freq != current_table.lcd_freq)) {
+		devmgr_log("lcd_freq %d", new_table.lcd_freq);
 		sys_set_int(DISPLAY_FRAME_RATE_PATH, new_table.lcd_freq);
 		current_table.lcd_freq = new_table.lcd_freq;
 	}
 
-	current_level=level;
-	current_mode=mode;
+	current_level = level;
+	current_mode = mode;
 
 	return 0;
 }
